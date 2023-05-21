@@ -223,8 +223,10 @@ class Player(pygame.sprite.Sprite):
             self.game.new_level()
         else:
             collided_lava = pygame.sprite.spritecollide(self, self.lava, False)
+            collided_water = pygame.sprite.spritecollide(self, self.water_tiles, False)
 
-            if collided_lava:
+
+            if collided_lava or collided_water:
 
                 game.die()
             else:
@@ -330,6 +332,7 @@ class Game():
         main_tile_group.empty()
         platform_tile_group.empty()
         water_tile_group.empty()
+        lava_tile_group.empty()
         key_group.empty()
         door_tile_group.empty()
         self.load_tile_map()
