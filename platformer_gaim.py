@@ -315,6 +315,76 @@ class Player(pygame.sprite.Sprite):
     def set_start_pos(self, x, y):
         self.position = (x, y)
 
+class Zombie(pygame.sprite.Sprite):
+
+    def __init__(self, platform, game):
+        super().__init__()
+        self.spritesheet = SpriteSheet("platformer_gaim/zombie-walk.png")
+
+        self.move_right_sprites = []
+        self.move_left_sprites = []
+        
+        self.move_right_sprites.append(self.spritesheet.get_image_rect(0, 0, 48, 48).convert_alpha())
+        self.move_right_sprites.append(self.spritesheet.get_image_rect(48, 0, 48, 48).convert_alpha())
+        self.move_right_sprites.append(self.spritesheet.get_image_rect(96, 0, 48, 48).convert_alpha())
+        self.move_right_sprites.append(self.spritesheet.get_image_rect(144, 0, 48, 48).convert_alpha())
+
+
+        for sprite in self.move_right_sprites:
+            self.move_left_sprites.append(pygame.transform.flip(sprite, True, False))
+
+
+        self.currentsprite = 0
+        self.animate_speed = 0.5
+        
+        
+        self.image = self.move_right_sprites[0]
+        self.rect = self.image.get_rect()
+
+
+
+       
+        self.platform_tiles = platform
+        self.game = game
+
+
+        #kinematic vectors
+        self.position = pygame.math.Vector2(50, 300)
+        self.velocity = pygame.math.Vector2(0, 0)
+        self.acceleration = pygame.math.Vector2(0, 0)
+        
+
+        #kinematic constants
+        self.HORIZONTAL_ACCELERATION = 1
+        self.HORIZONTAL_FRICTION = 0.15
+        self.VERTICAL_ACCELERATION = 0.5
+        self.VERTICAL_JUMP_SPEED = 15
+        self.TERMINAL_VELOCITY = 15 
+
+    def update(self):
+        self.mask = pygame.mask.from_surface(self.image)
+        self.move()
+        self.check_collisions()
+
+    def move(self):
+        self.acceleration = pygame.math.Vector2(0, 0)
+        self.acceleration.x = self.HORIZONTAL_ACCELERATION
+        self.animate(self.move_right_sprites)
+        self.image = self.stand_right_sprite
+
+        
+
+        #calculate new kinematic values
+        self.acceleration.x -= self.velocity.x * self.HORIZONTAL_FRICTION
+        self.velocity += self.acceleration
+        self.position += self.velocity + (0.5 * self.acceleration)     
+
+        #update rect
+
+        self.rect.bottomleft = self.position
+        
+
+
 class Game():
 
     def __init__(self):
