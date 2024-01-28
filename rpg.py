@@ -1,5 +1,7 @@
 import pygame
-import platformer_gaim.rpg_levels as rpg_levels
+import rpg_levels as rpg_levels
+from spritesheet import SpriteSheet
+
 
 pygame.init()
 
@@ -18,13 +20,20 @@ pygame.display.set_caption("RPG")
 FPS = 60
 clock = pygame.time.Clock()
 
+
+sprite_sheet = SpriteSheet("roguelikeSheet_transparent.png")
+
+
+
+
 class Tile(pygame.sprite.Sprite):
     def __init__(self,x, y, tile_type):
         super().__init__()
         self.image = pygame.Surface((TILE_SIZE, TILE_SIZE))
         self.rect = self.image.get_rect()
         if tile_type == "B":
-            self.image.fill(BORDER_COLOR)
+            # self.image.fill(BORDER_COLOR)
+            self.image = sprite_sheet.get_image_rect(5, 5, 30, 30)
         elif tile_type == "P":
             self.image.fill(SKY_BLUE)
             pygame.draw.circle(self.image, "grey", (TILE_SIZE // 2, TILE_SIZE // 2), TILE_SIZE // 2)
