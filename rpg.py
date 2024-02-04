@@ -12,7 +12,7 @@ WINDOW_H = TILE_SIZE * 21
 CENTER_X = WINDOW_W // 2
 CENTER_Y = WINDOW_H // 2
 SKY_BLUE = (177, 229, 233)
-PLAYER_SPEED = 5
+PLAYER_SPEED = TILE_SIZE / 6
 
 display_surface = pygame.display.set_mode((WINDOW_W, WINDOW_H))
 pygame.display.set_caption("RPG")
@@ -33,7 +33,11 @@ class Tile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         if tile_type == "B":
             # self.image.fill(BORDER_COLOR)
-            self.image = sprite_sheet.get_image_rect(5, 5, 30, 30)
+            self.image = sprite_sheet.get_image_rect(306, 187, 16, 16, TILE_SIZE, TILE_SIZE)
+        elif tile_type == "C":
+            # self.image.fill(BORDER_COLOR)
+            self.image = sprite_sheet.get_image_rect(306, 170, 16, 16, TILE_SIZE, TILE_SIZE)
+
         elif tile_type == "P":
             self.image.fill(SKY_BLUE)
             pygame.draw.circle(self.image, "grey", (TILE_SIZE // 2, TILE_SIZE // 2), TILE_SIZE // 2)
@@ -119,22 +123,22 @@ while running:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        if (game.tltile.rect.left >= 0 and game.player.rect.left > 30) or (game.player.rect.x > CENTER_X):
+        if (game.tltile.rect.left >= 0 and game.player.rect.left > TILE_SIZE) or (game.player.rect.x > CENTER_X):
             player_shift_x = -PLAYER_SPEED
         elif game.tltile.rect.left < 0:
             map_shift_x = PLAYER_SPEED
     elif keys[pygame.K_RIGHT]:
-        if (game.brtile.rect.right <= WINDOW_W and game.player.rect.right < WINDOW_W - 30) or (game.player.rect.x < CENTER_X):
+        if (game.brtile.rect.right <= WINDOW_W and game.player.rect.right < WINDOW_W - TILE_SIZE) or (game.player.rect.x < CENTER_X):
             player_shift_x = PLAYER_SPEED
         elif game.brtile.rect.right > WINDOW_W:
             map_shift_x = -PLAYER_SPEED
     elif keys[pygame.K_UP]:
-        if (game.tltile.rect.top >= 0 and game.player.rect.top > 30) or (game.player.rect.y > CENTER_Y):
+        if (game.tltile.rect.top >= 0 and game.player.rect.top > TILE_SIZE) or (game.player.rect.y > CENTER_Y):
             player_shift_y = -PLAYER_SPEED
         elif game.tltile.rect.top < 0:
             map_shift_y = PLAYER_SPEED
     elif keys[pygame.K_DOWN]:
-        if (game.brtile.rect.bottom <= WINDOW_H and game.player.rect.bottom < WINDOW_H - 30) or (game.player.rect.y < CENTER_Y):
+        if (game.brtile.rect.bottom <= WINDOW_H and game.player.rect.bottom < WINDOW_H - TILE_SIZE) or (game.player.rect.y < CENTER_Y):
             player_shift_y = PLAYER_SPEED
         elif game.brtile.rect.bottom > WINDOW_H:
             map_shift_y = -PLAYER_SPEED
